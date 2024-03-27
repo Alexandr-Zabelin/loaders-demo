@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  padding: 8px;
+}
+
+.recursion-wrapper {
+  position: absolute;
+  bottom: -50px;
+  width: 100%;
+}
+
+.recursion-row {
+  position: absolute;
+  bottom: -20px;
+  width: 100%;
+}
+
+.recursion-titles {
+  display: flex;
+  justify-content: center;
+}
+
+.recursion-block {
+  border: 1px solid black;
+  height: 20px;
+  width: 20px;
+  left: 10px;
+  text-align: center;
+}
+
+.loader-wrapper {
+  width: 90%;
+  height: 50px;
+  margin: auto;
+  border: 3px solid gray;
+  border-radius: 8px;
+  position: relative;
+}
+
+.loader-content {
+  height: 100%;
+  border-radius: 5px;
+}
+
+.loader-content__stack {
+  background-color: #0059fe;
+}
+
+.loader-content__fiber {
+  background-color: #66ba69;
+}

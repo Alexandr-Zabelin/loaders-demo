@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Stack</title>
+    <link rel="stylesheet" href="common/styles.css" />
+  </head>
+  <body>
+    <h1>Stack</h1>
+    <div id="app"></div>
+    <script src="common/scripts.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+    <script type="text/babel">
+      class Recursion extends React.PureComponent {
+        render() {
+          const { lvl, counter } = this.props;
+
+          slowDownProccess();
+
+          const blocksCount = INITIAL_LVL - lvl + 1;
+
+          return (
+            lvl > 0 && (
+              <div className="recursion-row">
+                <div className="recursion-titles">
+                  {Array.from({ length: blocksCount }).map((_, idx) => (
+                    <div key={idx} className="recursion-block">
+                      {counter}
+                    </div>
+                  ))}
+                </div>
+
+                <Recursion lvl={lvl - 1} counter={counter} />
+              </div>
+            )
+          );
+        }
+      }
+
+      class Loader extends React.PureComponent {
+        render() {
+          const { lvl, completementRatio, counter } = this.props;
+
+          return (
+            <div className="loader-wrapper">
+              <div
+                className="loader-content loader-content__stack"
+                style={{
+                  width: `${completementRatio}%`,
+                }}
+              />
+              <div className="recursion-wrapper">
+                <Recursion lvl={lvl} counter={counter} />
+              </div>
+            </div>
+          );
+        }
+      }
+
+      class App extends React.Component {
+        constructor() {
+          super();
+
+          this.state = {
+            counter: 0,
+            completementRatio: getCompletementRatio(),
+          };
+        }
+
+        componentDidMount() {
+          this.counterIntervalId = setInterval(
+            () =>
+              this.setState(({ counter, ...rest }) => ({
+                ...rest,
+                counter: (counter % 10) + 1,
+              })),
+            COUNTER_INTERVAL
+          );
+
+          this.completementRatioIntervalId = setInterval(
+            () =>
+              this.setState(({ completementRatio, ...rest }) => {
+                const newRatio = getCompletementRatio();
+
+                if (
+                  newRatio === CHECKPOINT_COMPLETEMENT_RATIO &&
+                  completementRatio !== CHECKPOINT_COMPLETEMENT_RATIO
+                ) {
+                  console.log(new Date().getTime() - start);
+                }
+
+                return {
+                  ...rest,
+                  completementRatio: newRatio,
+                };
+              }),
+            COMPLETEMENT_RATIO_INTERVAL
+          );
+        }
+
+        componentWillUnmount() {
+          clearInterval(this.counterIntervalId);
+          clearInterval(this.completementRatioIntervalId);
+        }
+
+        render() {
+          return (
+            <Loader
+              counter={this.state.counter}
+              completementRatio={this.state.completementRatio}
+              lvl={INITIAL_LVL}
+            />
+          );
+        }
+      }
+
+      const container = document.getElementById("app");
+      ReactDOM.render(<App />, container);
+    </script>
+  </body>
+</html>
